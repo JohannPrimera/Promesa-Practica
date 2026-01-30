@@ -1,0 +1,72 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #6a6fe0;
+    /* Purple background */
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#pedido-container {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+#btn-iniciar {
+    background-color: #6a82fb;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s;
+    margin-bottom: 20px;
+}
+
+#btn-iniciar:hover {
+    background-color: #5a72eb;
+}
+
+#lista-pedidos {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.mensaje {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+}
+
+.mensaje:last-child {
+    border-bottom: none;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+    font-weight: bold;
+}

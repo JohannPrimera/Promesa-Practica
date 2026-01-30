@@ -1,87 +1,112 @@
-//promesas en Javascript
-
-//selector
-// const info = document.querySelector("#info");
-
 //Probabilidad de error en el pedido = 50%
 const probabilidad = () => {
     return Math.random() < 0.4;
 }
 
-//Promesas
-const ordenandoBebida = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        if (probabilidad()) {
-            resolve('Promesa cumplida');
-        } else {
-            reject('Promesa no cumplida');
-        }
-    }, 1000);
-});
+const pedidoContainer = document.getElementById('lista-pedidos');
+const btnIniciar = document.getElementById('btn-iniciar');
 
-// const ordenandoSnack = new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//         if (false) {
-//             resolve('Promesa cumplida');
-//         } else {
-//             reject('Promesa no cumplida');
-//         }
-//     }, 2000);
-// });
-
-const promesaCumplida = (valor) => {
-    console.log(valor);
-};
-const promesaRechazada = (razonRechazo) => {
-    console.log(razonRechazo);
-};
-
-const todoOk = (valor) => {
-    console.log("Todo Ok: ", valor);
+function mostrarMensaje(mensaje, tipo = '') {
+    const p = document.createElement('p');
+    p.textContent = mensaje;
+    p.classList.add('mensaje');
+    if (tipo) p.classList.add(tipo);
+    pedidoContainer.appendChild(p);
 }
 
-const todoMal = (valor) => {
-    console.log("Todo Mal: ", valor);
+//funcion de pedidos
+function ordenarHamburguesa(producto) {
+    return new Promise((resolve, reject) => {
+        mostrarMensaje(`Ordenando: ${producto}...`);
+        console.log(`Ordenando: ${producto}`);
+        setTimeout(() => {
+            if (producto === "Smash Burger") {
+                resolve("Una Smash Burger 🍔");
+            } else {
+                reject("Este producto no está disponible");
+            }
+        }, 2000);
+    });
 }
 
-// ordenandoBebida
-// .then(todoOk)
-// .catch(todoMal)
+function ordenarBebida(producto) {
+    return new Promise((resolve, reject) => {
+        mostrarMensaje(`Ordenando: ${producto}...`);
+        console.log(`Ordenando: ${producto}`);
+        setTimeout(() => {
+            if (producto === "Coke") {
+                resolve("Una Coke 🥤");
+            } else {
+                reject("Este producto no está disponible");
+            }
+        }, 2000);
+    });
+}
 
-// ordenandoSnack
-// .then(todoOk)
-// .catch(todoMal)
+function ordenarAcompanamiento(producto) {
+    return new Promise((resolve, reject) => {
+        mostrarMensaje(`Ordenando: ${producto}...`);
+        console.log(`Ordenando: ${producto}`);
+        setTimeout(() => {
+            if (producto === "Papitas Fritas") {
+                resolve("Unas Papitas Fritas 🍟");
+            } else {
+                reject("Este producto no está disponible");
+            }
+        }, 2000);
+    });
+}
 
-// const manejoPedidos = () => {
-//     if (probabilidad()) {
-//         ordenandoBebida
-//         .then(todoOk)
-//         .catch(todoMal)
-//         ordenandoSnack
-//         .then(todoOk)
-//         .catch(todoMal)
 
-//     } else {
-//         console.log("No se puede realizar el pedido. Intenta nuevamente")
-//     }
-// }
+//funcion para iniciar pedido
+function procesarPedido(respuesta) {
+    return new Promise(resolve => {
+        mostrarMensaje("Procesando Orden...");
+        console.log("Procesando Orden...");
+        mostrarMensaje(`Su orden es: "${respuesta}"`, 'success');
+        console.log(`Su orden es: "${respuesta}"`);
+        setTimeout(() => {
+            resolve("Orden Completa, ¡Buen provecho!");
+        }, 3000);
+    });
+}
 
-//la funcion contiene codigo asinconico - async
-async function manejoPedidosV2() {
 
-    //try - intenta ejecutar codifo asincrono y obtener el resolve
+//Aqui se esta realizando los pedidos pero utilizando el metodo async -  await
+async function realizarPedido(hamburguesa, bebida, acompanamiento) {
+    // Limpiar contenedor
+    pedidoContainer.innerHTML = '';
+    btnIniciar.disabled = true;
+    btnIniciar.textContent = "Procesando...";
+
     try {
+        const respuestaHamburguesa = await ordenarHamburguesa(hamburguesa);
+        console.log("Respuesta recibida: " + respuestaHamburguesa);
+        const hamburguesaProcesada = await procesarPedido(respuestaHamburguesa);
+        console.log(hamburguesaProcesada);
+        mostrarMensaje(hamburguesaProcesada, 'success');
 
-        // se espera la ejecucion del codigo asincrono - async
-        const bebida = await ordenandoBebida;
-        console.log(bebida);
+        const respuestaBebida = await ordenarBebida(bebida);
+        console.log("Respuesta recibida: " + respuestaBebida);
+        const bebidaProcesada = await procesarPedido(respuestaBebida);
+        console.log(bebidaProcesada);
+        mostrarMensaje(bebidaProcesada, 'success');
 
-        // catch - captura los errores
-} catch (error) {
-    console.log(error);
+        const respuestaAcompanamiento = await ordenarAcompanamiento(acompanamiento);
+        console.log("Respuesta recibida: " + respuestaAcompanamiento);
+        const acompanamientoProcesado = await procesarPedido(respuestaAcompanamiento);
+        console.log(acompanamientoProcesado);
+        mostrarMensaje(acompanamientoProcesado, 'success');
+
+    } catch (error) {
+        console.log(error);
+        mostrarMensaje(`Error: ${error}`, 'error');
+    } finally {
+        btnIniciar.disabled = false;
+        btnIniciar.textContent = "Iniciar Orden";
+    }
 }
-}
 
-manejoPedidosV2();
-
-
+btnIniciar.addEventListener('click', () => {
+    realizarPedido("Smash Burger", "Coke", "Papitas Fritas");
+});
